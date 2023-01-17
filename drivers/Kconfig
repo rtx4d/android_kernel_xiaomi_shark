@@ -212,4 +212,7 @@ source "drivers/sensors/Kconfig"
 
 source "drivers/tee/Kconfig"
 
+# device detect
+source "drivers/devdetect/Kconfig"
+
 endmenu
