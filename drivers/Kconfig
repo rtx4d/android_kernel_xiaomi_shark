@@ -215,4 +215,7 @@ source "drivers/tee/Kconfig"
 # device detect
 source "drivers/devdetect/Kconfig"
 
+# Shark debug feature
+source "drivers/shark_util/Kconfig"
+
 endmenu

@@ -183,3 +183,4 @@ obj-$(CONFIG_SENSORS_SSC)		+= sensors/
 obj-$(CONFIG_TEE)		+= tee/
 #device detect
 obj-$(CONFIG_HW_DEV_DCT)  += devdetect/
+obj-$(CONFIG_SHARK_POWER_DEBUG) += shark_util/
