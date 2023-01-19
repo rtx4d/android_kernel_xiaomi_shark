@@ -159,6 +159,12 @@ static void set_dload_mode(int on)
 	dload_mode_enabled = on;
 }
 
+void bs_set_dload_mode(int on)
+{
+	set_dload_mode(on);
+}
+EXPORT_SYMBOL(bs_set_dload_mode);
+
 static bool get_dload_mode(void)
 {
 	return dload_mode_enabled;
