@@ -1,9 +1,31 @@
 ifeq ($(CONFIG_MACH_XIAOMI_SDM845),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-y += \
-		sdm845-shark-overlay.dtbo
+		sdm845-shark-preevt-overlay.dtbo \
+		sdm845-v2-shark-preevt-overlay.dtbo \
+		sdm845-shark-evt-overlay.dtbo \
+		sdm845-v2-shark-evt-overlay.dtbo \
+		sdm845-v2-shark-dvt-overlay.dtbo \
+		sdm845-v2.1-shark-dvt-overlay.dtbo \
+		sdm845-v2-shark-dvt2-overlay.dtbo \
+		sdm845-v2.1-shark-dvt2-overlay.dtbo \
+		sdm845-v2-shark-pvt-overlay.dtbo \
+		sdm845-v2.1-shark-pvt-overlay.dtbo \
+		sdm845-v2.1-shark-pvt2-overlay.dtbo
+		
 
-sdm845-shark-overlay.dtbo-base := sdm845-v2.1.dtb
+sdm845-shark-preevt-overlay-base := sdm845.dtb
+sdm845-v2-shark-preevt-overlay.dtbo-base := sdm845-v2.dtb
+sdm845-shark-evt-overlay.dtbo-base := sdm845.dtb
+sdm845-v2-shark-evt-overlay.dtbo-base := sdm845-v2.dtb
+sdm845-v2-shark-dvt-overlay.dtbo-base := sdm845-v2.dtb
+sdm845-v2.1-shark-dvt-overlay.dtbo-base := sdm845-v2.1.dtb
+sdm845-v2-shark-dvt2-overlay.dtbo-base := sdm845-v2.dtb
+sdm845-v2.1-shark-dvt2-overlay.dtbo-base := sdm845-v2.1.dtb
+sdm845-v2-shark-pvt-overlay.dtbo-base := sdm845-v2.dtb
+sdm845-v2.1-shark-pvt-overlay.dtbo-base := sdm845-v2.1.dtb
+sdm845-v2.1-shark-pvt2-overlay.dtbo-base := sdm845-v2.1.dtb
+
 else
 dtb-y += \
 	sdm845-shark.dtb
