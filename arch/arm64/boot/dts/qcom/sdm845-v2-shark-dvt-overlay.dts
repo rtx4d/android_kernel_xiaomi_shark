@@ -25,10 +25,10 @@
 #include "sdm845-shark.dtsi"
 
 / {
-	model = "Blackshark Technologies, Inc. SDM845 v2.1 MTP. Shark PVT2";
+	model = "Blackshark Technologies, Inc. SDM845 v2 MTP. Shark DVT";
 	compatible = "qcom,sdm845-mtp", "qcom,sdm845", "qcom,mtp";
-	qcom,msm-id = <321 0x20001>;
+	qcom,msm-id = <321 0x20000>;
 	qcom,board-id = <8 8>;
-	blackshark,board-id = <0x20>;
+	blackshark,board-id = <0x02>;
 };
 
