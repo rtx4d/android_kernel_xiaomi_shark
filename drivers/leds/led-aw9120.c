@@ -17,7 +17,7 @@
 #include <linux/atomic.h>
 #include <linux/leds.h>
 #include <asm/uaccess.h>
-#include <linux/hw_dev_dec.h>
+// #include <linux/hw_dev_dec.h>
 
 //for color control
 #include <linux/init.h>

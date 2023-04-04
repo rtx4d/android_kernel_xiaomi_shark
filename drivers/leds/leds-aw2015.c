@@ -23,7 +23,7 @@
 #include <linux/slab.h>
 #include <linux/regulator/consumer.h>
 #include <linux/leds-aw2015.h>
-#include <linux/hw_dev_dec.h>
+// #include <linux/hw_dev_dec.h>
 #include <linux/uaccess.h>
 #include <linux/delay.h>
 #include <linux/sched.h>
