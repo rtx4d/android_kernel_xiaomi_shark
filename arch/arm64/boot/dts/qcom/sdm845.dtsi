@@ -867,6 +867,7 @@
 	};
 
 	restart@10ac000 {
+		qcom,force-warm-reboot;
 		compatible = "qcom,pshold";
 		reg = <0xC264000 0x4>,
 		      <0x1fd3000 0x4>;
