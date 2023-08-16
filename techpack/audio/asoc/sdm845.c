@@ -4193,19 +4193,6 @@ static int msm_audrx_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_add_routes(dapm, wcd_audio_paths,
 				ARRAY_SIZE(wcd_audio_paths));
 
-	if (get_hw_version_platform() == HARDWARE_PLATFORM_POLARIS ||
-			get_hw_version_platform() == HARDWARE_PLATFORM_DIPPERN ||
-			get_hw_version_platform() == HARDWARE_PLATFORM_URSA ||
-			get_hw_version_platform() == HARDWARE_PLATFORM_EQUULEUS ||
-			get_hw_version_platform() == HARDWARE_PLATFORM_PERSEUS) {
-		pr_info("add the External AMIC2 Mux\n");
-		snd_soc_dapm_new_controls(dapm, sdm845_xiaomi_dapm_widgets,
-				ARRAY_SIZE(sdm845_xiaomi_dapm_widgets));
-
-		snd_soc_dapm_add_routes(dapm, sdm845_xiaomi_dapm_routes,
-				ARRAY_SIZE(sdm845_xiaomi_dapm_routes));
-	}
-
 	snd_soc_dapm_ignore_suspend(dapm, "Handset Mic");
 	snd_soc_dapm_ignore_suspend(dapm, "AMIC2");
 	snd_soc_dapm_ignore_suspend(dapm, "AMIC2_EXT_0");
