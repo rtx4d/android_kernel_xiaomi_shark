@@ -763,4 +763,9 @@
         qcom,en-cabc = <1>;
 };
 
+&soc {
+	restart@10ac000 {
+		qcom,force-warm-reboot;
+	};
+};
 
