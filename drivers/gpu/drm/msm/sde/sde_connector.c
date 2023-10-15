@@ -78,7 +78,7 @@ static int sde_backlight_device_update_status(struct backlight_device *bd)
 	if ((bd->props.power != FB_BLANK_UNBLANK) ||
 			(bd->props.state & BL_CORE_FBBLANK) ||
 			(bd->props.state & BL_CORE_SUSPENDED)) {
-                        pr_err("%s err, power %d, state %d, brightness %d\n", __FUNCTION__, bd->props.power, bd->props.state, brightness);
+                        pr_err("iris2 %s err, power %d, state %d, brightness %d\n", __FUNCTION__, bd->props.power, bd->props.state, brightness);
                         brightness = 0;
     }
 

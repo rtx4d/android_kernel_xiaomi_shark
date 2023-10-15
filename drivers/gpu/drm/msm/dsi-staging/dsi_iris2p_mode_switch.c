@@ -48,10 +48,10 @@ u32 iris_lp_memc_calc(u32 value)
 	if (value >= LEVEL_MAX)
 	{
 		value = LEVEL_MAX - 1;
-		pr_err("#### %s:%d, Low Power MEMC level is out of range.\n", __func__, __LINE__);
+		pr_err("iris2 #### %s:%d, Low Power MEMC level is out of range.\n", __func__, __LINE__);
 	}
 
-	pr_debug("#### %s:%d, Low Power MEMC level hres = %d, vres = %d, rx_ch = %d.\n", __func__, __LINE__,
+	pr_debug("iris2 #### %s:%d, Low Power MEMC level hres = %d, vres = %d, rx_ch = %d.\n", __func__, __LINE__,
 						hres, vres, iris_info.work_mode.rx_ch);
 
 	if(((hres / 4)	== (vres / 3)) || ((hres / 3)  == (vres / 4)))
@@ -108,7 +108,7 @@ u32 iris_lp_memc_calc(u32 value)
 
 	frc_timing = (u32)lp_memc_timing[1] << 16 | (u32)lp_memc_timing[0];
 
-	pr_debug("#### %s:%d,wHres: %d, wVres: %d, low power memc timing: 0x%x\n", __func__, __LINE__, lp_memc_timing[0], lp_memc_timing[1], frc_timing);
+	pr_debug("iris2 #### %s:%d,wHres: %d, wVres: %d, low power memc timing: 0x%x\n", __func__, __LINE__, lp_memc_timing[0], lp_memc_timing[1], frc_timing);
 
 	return frc_timing;
 }
@@ -246,9 +246,9 @@ int iris_proc_frcc_setting(void)
 	else
 		Vsize = Input_Vtotal;//DisplayVtotal;
 
-	pr_debug("%s: get timing info, infps=%d, displayVtotal = %d, InVactive = %d, StartLine = %d, Vsize = %d\n",
+	pr_debug("iris2 %s: get timing info, infps=%d, displayVtotal = %d, InVactive = %d, StartLine = %d, Vsize = %d\n",
 		__func__, Infps, DisplayVtotal, InVactive, StartLine, Vsize);
-	pr_debug("TE_fps = %d, display_vsync = %d, inputVres = %d, Scaler_EN = %d, capture_en = %d, InputVtotal = %d\n",
+	pr_debug("iris2 TE_fps = %d, display_vsync = %d, inputVres = %d, Scaler_EN = %d, capture_en = %d, InputVtotal = %d\n",
 		te_fps, display_vsync, Input_Vres, Scaler_EN, Capture_EN, Input_Vtotal);
 
 	switch (Infps) {
@@ -327,7 +327,7 @@ int iris_proc_frcc_setting(void)
 			goto SET_REG_REPEAT;
 
 		default:
-			pr_err("%s, using default frcc parameters\n", __func__);
+			pr_err("iris2 %s, using default frcc parameters\n", __func__);
 			goto SET_REG;
 	}
 
@@ -351,7 +351,7 @@ int iris_proc_frcc_setting(void)
 	val_frcc_dtg_sync |= FIRepeatCF_TH << FI_REPEATCF_TH;
 
 SET_REG:
-	pr_debug("%s: reg5=%x, reg8=%x, reg16=%x, reg17=%x, reg18=%x, cmd_th=%x\n", __func__,
+	pr_debug("iris2 %s: reg5=%x, reg8=%x, reg16=%x, reg17=%x, reg18=%x, cmd_th=%x\n", __func__,
 		val_frcc_reg5, val_frcc_reg8, val_frcc_reg16, val_frcc_reg17, val_frcc_reg18, val_frcc_cmd_th);
 
 	iris_cmd_reg_add(&meta_cmd, IRIS_PWIL_ADDR + VIDEO_CTRL2, video_ctrl2);
@@ -402,7 +402,7 @@ static int iris_memc_demo_win_set(struct fi_demo_win fi_demo_win_para)
 		if (endy + iris_info.fi_demo_win_info.borderwidth >= lp_memc_timing[1])
 			endy = lp_memc_timing[1] - iris_info.fi_demo_win_info.borderwidth;
 
-		pr_debug("iris: %s: startx = %d, starty = %d, endx = %d, endy = %d, lp_memc_timing[0] = %d, lp_memc_timing[1] = %d.\n",
+		pr_debug("iris2 iris: %s: startx = %d, starty = %d, endx = %d, endy = %d, lp_memc_timing[0] = %d, lp_memc_timing[1] = %d.\n",
 				__func__, startx, starty, endx, endy, lp_memc_timing[0], lp_memc_timing[1]);
 		fi_demo_win_para.colsize = (startx & 0xfff) | ((endx & 0xfff) << 16);
 		fi_demo_win_para.rowsize = (starty & 0xfff) | ((endy & 0xfff) << 16);
@@ -460,12 +460,12 @@ int iris_proc_constant_ratio(void)
 	out_t = 10;
 
 	r = gcd(in_t, out_t);
-	pr_debug("in_t %u out_t %u r %u\n", in_t, out_t, r);
+	pr_debug("iris2 in_t %u out_t %u r %u\n", in_t, out_t, r);
 	frc_setting->in_ratio = out_t / r;
 	frc_setting->out_ratio = in_t / r;
 	frc_setting->scale = iris_proc_scale(dvts, dvts);
 
-	pr_debug("in/out %u:%u\n", frc_setting->in_ratio, frc_setting->out_ratio);
+	pr_debug("iris2 in/out %u:%u\n", frc_setting->in_ratio, frc_setting->out_ratio);
 	// update register
 	iris_set_constant_ratio();
 
@@ -508,11 +508,11 @@ int iris_mode_frc_prepare(void)
 				#endif
 
 				if (val != IRIS_FRC_PRE)
-					pr_info("iris: mode = %08x, cnt = %d\n", val, mode_state->kickoff_cnt);
+					pr_info("iris2 iris: mode = %08x, cnt = %d\n", val, mode_state->kickoff_cnt);
 				else
 					eiris_frc_prepare_state = IRIS_FRC_PRE_DONE;
 			} else {
-				pr_debug("iris: memc prep time out\n");
+				pr_debug("iris2 iris: memc prep time out\n");
 				eiris_frc_prepare_state = IRIS_FRC_PRE_TIMEOUT;
 			}
 			break;
@@ -736,6 +736,6 @@ void iris_mode_switch_cmd(struct dsi_panel *panel)
 	}
 
 	if(pre_current_mode != mode_state->current_mode)
-		pr_info("%s, %d: mode from %d to %d\n", __func__, __LINE__, pre_current_mode, mode_state->current_mode);
+		pr_info("iris2 %s, %d: mode from %d to %d\n", __func__, __LINE__, pre_current_mode, mode_state->current_mode);
 
 }

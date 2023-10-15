@@ -46,7 +46,7 @@ int iris_i2c_reg_write(unsigned int addr, unsigned int data)
 
 	ret = i2c_transfer(iris_i2c_client->adapter, &msg, 1);
 	if (ret < 1)
-		pr_err("%s: I2C WRITE FAILED=[%d]\n", __func__, ret);
+		pr_err("iris2 %s: I2C WRITE FAILED=[%d]\n", __func__, ret);
 
 	mutex_unlock(&i2c_lock);
 
@@ -82,7 +82,7 @@ int iris_i2c_reg_read(unsigned int addr, unsigned int *data)
 
 	ret = i2c_transfer(iris_i2c_client->adapter, msgs, 2);
 	if (ret < 1)
-		pr_err("%s: I2C READ FAILED=[%d]\n", __func__, ret);
+		pr_err("iris2 %s: I2C READ FAILED=[%d]\n", __func__, ret);
 
 	*data = (rd_buf[0] << 24) + (rd_buf[1] << 16) + (rd_buf[2] << 8) + rd_buf[3];
 	mutex_unlock(&i2c_lock);
@@ -99,7 +99,7 @@ static int iris_i2c_probe(struct i2c_client *client, const struct i2c_device_id 
         return -EINVAL;
 	}
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-		pr_err("iris2p i2c_check_functionality failed\n");
+		pr_err("iris2 iris2p i2c_check_functionality failed\n");
 		return -ENODEV;
 	}
 
@@ -127,16 +127,16 @@ static struct i2c_driver iris_i2c_driver = {
 static int __init iris_i2c_init(void)
 {
 	int ret;
-	pr_debug("Enter\n");
+	pr_debug("iris2 Enter\n");
 
 	ret = i2c_add_driver(&iris_i2c_driver);
 	if (ret) {
-		pr_err("Unable to register driver (%d)\n", ret);
+		pr_err("iris2 Unable to register driver (%d)\n", ret);
 		return ret;
 	}
 	mutex_init(&i2c_lock);
 
-	pr_debug("Exit\n");
+	pr_debug("iris2 Exit\n");
 
 	return ret;
 }
@@ -144,9 +144,9 @@ static int __init iris_i2c_init(void)
 
 static void __exit iris_i2c_exit(void)
 {
-	pr_debug("Enter\n");
+	pr_debug("iris2 Enter\n");
 	i2c_del_driver(&iris_i2c_driver);
-	pr_debug("Exit\n");
+	pr_debug("iris2 Exit\n");
 }
 
 

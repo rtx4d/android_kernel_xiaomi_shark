@@ -1,7 +1,7 @@
 #include "dsi_iris2p_def.h"
 
 static struct demo_win_info iris_demo_win_info;
-int iris_debug_power_opt_disable = 0;
+int iris_debug_power_opt_disable = 1;
 int iris_debug_fw_download_disable = 0;
 static u32 iris_color_x_buf[]= {
     4127,
@@ -137,11 +137,11 @@ static int iris_oprt_rotation_set(void __user *argp)
 
 	ret = copy_from_user(&value, argp, sizeof(u32));
 	if (ret) {
-		pr_err("can not copy form user %s\n", __func__);
+		pr_err("iris2 can not copy form user %s\n", __func__);
 		return ret;
 	}
 	rotationen = !!(value);
-	pr_debug("rotationen = %d\n", rotationen);
+	pr_debug("iris2 rotationen = %d\n", rotationen);
 
 	top_ctrl0 = (rotationen << ROTATION) | (0 << TRUE_CUT_EXT_EN)
 				| (0 << INTERVAL_SHIFT_EN) | (1 << PHASE_SHIFT_EN);
@@ -163,10 +163,10 @@ static int iris_oprt_video_framerate_set(void __user *argp)
 
     ret = copy_from_user(&new_framerate_ms, argp, sizeof(u32));
     if (ret) {
-        pr_err("copy from user error\n");
+        pr_err("iris2 copy from user error\n");
         return -EINVAL;
     }
-    pr_err("new fpkms = %u\n", new_framerate_ms);
+    pr_err("iris2 new fpkms = %u\n", new_framerate_ms);
 
     memc_input_fps = (new_framerate_ms + 500)/1000;
 
@@ -203,7 +203,7 @@ void iris_video_fps_get(u32 data)
 	frc_setting->in_ratio = frc_setting->in_fps / r;
 	frc_setting->out_ratio = output_timing->fps / r;
         memc_input_fps = frc_setting->in_fps;
-	pr_debug("%s, in_ratio = %d, out_ratio = %d\n", __func__, frc_setting->in_ratio, frc_setting->out_ratio);
+	pr_debug("iris2 %s, in_ratio = %d, out_ratio = %d\n", __func__, frc_setting->in_ratio, frc_setting->out_ratio);
 }
 
 static u32 iris_color_temp_x_get(u32 index)
@@ -293,7 +293,7 @@ static int iris_cmlut_table_read(int index, u32 target_addr_start, u32 *last_pkt
 	if (!iris_cmlut_buf) {
 		iris_cmlut_buf = kzalloc(32 * 1024, GFP_KERNEL);
 		if (!iris_cmlut_buf) {
-			pr_err("%s: failed to alloc cm lut mem, size = %d\n", __func__, 32 * 1024);
+			pr_err("iris2 %s: failed to alloc cm lut mem, size = %d\n", __func__, 32 * 1024);
 			return false;
 		}
 	}
@@ -408,7 +408,7 @@ void iris_gamma_table_reg_add(u32 addr, u32 val, bool last)
 
 		reg_indx = 0;
 		//iris_dump_packet1(gamma_cmd.cmd, gamma_cmd.cmd_len);
-		//pr_err("gamma cmd: %d %d\n", reg_indx, gamma_cmd.cmd_len);
+		//pr_err("iris2 gamma cmd: %d %d\n", reg_indx, gamma_cmd.cmd_len);
 
 	}
 }
@@ -444,11 +444,11 @@ void iris_gamma_table_update(struct feature_setting *chip_setting)
 	if (!chip_setting->gamma_enable) {
 		iris_gamma_table_reg_add(0xf1580000, Gamma_size + (dither_mode << 2) + (((width == 12) ? 0 : 1) << 15), false);
 		iris_gamma_table_reg_add(0xf159ffd4, 1, true);
-		pr_info("update iris gamma table: disable\n");
+		pr_info("iris2 update iris gamma table: disable\n");
 		return;
 	}
 
-	//pr_err("%d, %d, %d, %d\n", dither_mode, Gamma_size, width, length);
+	//pr_err("iris2 %d, %d, %d, %d\n", dither_mode, Gamma_size, width, length);
 	iris_gamma_table_reg_add(0xf1580000, Gamma_size + (dither_mode << 2) + (((width == 12) ? 0 : 1) << 15), false);
 	iris_gamma_table_reg_add(0xf159ffd4, 1, false);
 
@@ -460,14 +460,14 @@ void iris_gamma_table_update(struct feature_setting *chip_setting)
 		iris_gamma_table_reg_add(0xf1590000, *table_buf, false);
 		iris_gamma_table_reg_add(0xf1590004, *(table_buf + length), false);
 		iris_gamma_table_reg_add(0xf1590008, *(table_buf + length * 2), false);
-		pr_debug("%d %d %d\n", *table_buf, *(table_buf + length), *(table_buf + length * 2));
+		pr_debug("iris2 %d %d %d\n", *table_buf, *(table_buf + length), *(table_buf + length * 2));
 		table_buf++;
 	}
 
 	iris_gamma_table_reg_add(0xf1580000, Gamma_size + (dither_mode << 2) + (1 << 6) + (((width == 12) ? 0 : 1) << 15), false);
 	iris_gamma_table_reg_add(0xf159ffd4, 1, true);
 
-	pr_err("update iris gamma table: %d\n", index);
+	pr_err("iris2 update iris gamma table: %d\n", index);
 }
 
 
@@ -517,7 +517,7 @@ int iris_mipi_reg_read(u32 addr, u32 *value)
 
 	rc = ops->transfer(iris_panel->host, &reg_read_cmds.msg);
 	if (rc < 0) {
-		pr_err("failed to set cmds(%d), rc=%d\n", reg_read_cmds.msg.type, rc);
+		pr_err("iris2 failed to set cmds(%d), rc=%d\n", reg_read_cmds.msg.type, rc);
 		*value = 0xffffffff;
 		return rc;
 	}
@@ -637,7 +637,7 @@ void iris_datapath_csc_enable(u32 hdr_en)
 
 	iris_grcp_cmd.msg.tx_len = grcp_cmd.cmd_len;
 	iris_dsi_cmds_send(iris_panel, &iris_grcp_cmd, 1, DSI_CMD_SET_STATE_HS);
-	pr_info("update csc: %d\n", hdr_en);
+	pr_info("iris2 update csc: %d\n", hdr_en);
 }
 
 int iris_configure(u32 type, u32 value)
@@ -649,7 +649,7 @@ int iris_configure(u32 type, u32 value)
 	//u32 configAddr = 0;
 	//u32 configValue = 0;
 
-	pr_info("iris_configure: %d - 0x%x\n", type, value);
+	pr_info("iris2 iris_configure: %d - 0x%x\n", type, value);
 
 	if (type >= IRIS_CONFIG_TYPE_MAX)
 		return -EINVAL;
@@ -848,7 +848,7 @@ void iris_demo_window_update(struct demo_win_info *pdemo_win_info)
 		if (frcEndy + pdemo_win_info->borderwidth >= lp_memc_timing[1])
 			frcEndy = lp_memc_timing[1] - pdemo_win_info->borderwidth;
 
-		pr_debug("frc mode resolution: %d - %d - %d - %d - %d - %d\n", 
+		pr_debug("iris2 frc mode resolution: %d - %d - %d - %d - %d - %d\n", 
 			frcStartx, frcStarty, frcEndx, frcEndy, lp_memc_timing[0], lp_memc_timing[1]);
 
 		color = pdemo_win_info->color;
@@ -859,7 +859,7 @@ void iris_demo_window_update(struct demo_win_info *pdemo_win_info)
 		modectrl = modectrl | 1<<1;
 		modectrl = modectrl | ((pdemo_win_info->borderwidth & 0x7)<<4);
 
-		pr_debug("%s: COL_SIZE =%x, MODE_RING=%x, ROW_SIZE=%x, MODE_CTRL=%x\n",
+		pr_debug("iris2 %s: COL_SIZE =%x, MODE_RING=%x, ROW_SIZE=%x, MODE_CTRL=%x\n",
 			__func__, colsize, color, rowsize, modectrl);
 
 		iris_info.fi_demo_win_info.startx = pdemo_win_info->startx;
@@ -948,7 +948,7 @@ int iris_configure_ex(u32 type, u32 count, u32 *values)
 		|| (pdemo_win_info->endy > displayheight)
 		|| (pdemo_win_info->startx >  pdemo_win_info->endx)
 		|| (pdemo_win_info->starty >  pdemo_win_info->endy)) {
-		pr_err("demo window info is incorrect\n");
+		pr_err("iris2 demo window info is incorrect\n");
 		return -EINVAL;
 	}
 
@@ -965,7 +965,7 @@ static int iris_oprt_configure_ex(u32 type, u32 count, void __user *values)
 
 	val = kmalloc(sizeof(u32) * count, GFP_KERNEL);
 	if (!val) {
-		pr_err("can not kmalloc space\n");
+		pr_err("iris2 can not kmalloc space\n");
 		return -ENOSPC;
 	}
 	ret = copy_from_user(val, values, sizeof(u32) * count);
@@ -1088,20 +1088,20 @@ static int iris_oprt_configure_get(u32 type, u32 count, void __user *argp)
 
 	val = kmalloc(count * sizeof(u32), GFP_KERNEL);
 	if (val == NULL) {
-		pr_err("could not kmalloc space for func = %s\n", __func__);
+		pr_err("iris2 could not kmalloc space for func = %s\n", __func__);
 		return -ENOSPC;
 	}
 
 	ret = iris_configure_get(type, count, val);
 	if (ret) {
-		pr_err("get error\n");
+		pr_err("iris2 get error\n");
 		kfree(val);
 		return -EPERM;
 	}
 
 	ret = copy_to_user(argp, val, sizeof(u32) * count);
 	if (ret) {
-		pr_err("copy to user error\n");
+		pr_err("iris2 copy to user error\n");
 		kfree(val);
 		return -EPERM;
 	}
@@ -1120,7 +1120,7 @@ static int iris_oprt_get_lcd_calib_data(u32 type, u32 count, void __user *argp)
 
 	val = kmalloc(count * sizeof(uint8_t), GFP_KERNEL);
 	if (val == NULL) {
-		pr_err("could not kmalloc space for func = %s\n", __func__);
+		pr_err("iris2 could not kmalloc space for func = %s\n", __func__);
 		return -ENOSPC;
 	}
 
@@ -1132,23 +1132,23 @@ static int iris_oprt_get_lcd_calib_data(u32 type, u32 count, void __user *argp)
 			}
 		}
 		if (count == i) {
-			pr_err("lcd calibrate data invalid\n");
+			pr_err("iris2 lcd calibrate data invalid\n");
 			kfree(val);
 			return -ENOSPC;
 		} else {
 			memcpy(val, data, count);
 			for (i = 0; i<count; i++)
-				pr_err("0x%x cal data 0x%x\n", i, val[i]);
+				pr_err("iris2 0x%x cal data 0x%x\n", i, val[i]);
 		}
 	} else {
-		pr_err("lcd calibrate data err %p \n", data);
+		pr_err("iris2 lcd calibrate data err %p \n", data);
 		kfree(val);
 		return -ENOSPC;
 	}
 
 	ret = copy_to_user(argp, val, sizeof(uint8_t) * count);
 	if (ret) {
-		pr_err("copy to user error\n");
+		pr_err("iris2 copy to user error\n");
 		kfree(val);
 		return -EPERM;
 	}
@@ -1164,7 +1164,7 @@ static int iris_set_mode(void __user *argp)
 
 	ret = copy_from_user(&data, argp, sizeof(u32));
 
-	pr_info("iris_set_mode: new mode = %x, old  mode = %d\n",
+	pr_info("iris2 iris_set_mode: new mode = %x, old  mode = %d\n",
 		data, mode_state->sf_notify_mode);
 
 	mode = data & 0xffff;
@@ -1185,7 +1185,7 @@ static int iris_get_mode(void __user *argp)
 	struct iris_mode_state *mode_state = &iris_info.mode_state;
 
 	mode = mode_state->sf_notify_mode;
-	pr_debug("mode = %d\n", mode_state->sf_notify_mode);
+	pr_debug("iris2 mode = %d\n", mode_state->sf_notify_mode);
 	ret = copy_to_user(argp, &mode, sizeof(uint32_t));
 
 	return ret;
@@ -1204,7 +1204,7 @@ int iris_ioctl_operate_mode(void __user *argp)
 	struct msmfb_iris_operate_value val;
 	ret = copy_from_user(&val, argp, sizeof(val));
 	if (ret != 0) {
-		pr_err("can not copy from user\n");
+		pr_err("iris2 can not copy from user\n");
 		return -EPERM;
 	}
 	mutex_lock(&iris_info.config_mutex);
@@ -1244,7 +1244,7 @@ int iris_feature_setting_update_proc(void)
 	if (settint_update->pq_setting) {
 		chip_setting->pq_setting = user_setting->pq_setting;
 		iris_cmd_reg_add(&meta_cmd, IRIS_PQ_SETTING_ADDR, *((u32 *)&chip_setting->pq_setting));
-		pr_info("%s, %d: configValue = 0x%x.\n", __func__, __LINE__, *((u32 *)&chip_setting->pq_setting));
+		pr_info("iris2 %s, %d: configValue = 0x%x.\n", __func__, __LINE__, *((u32 *)&chip_setting->pq_setting));
 		settint_update->pq_setting = false;
 	}
 
@@ -1307,7 +1307,7 @@ int iris_feature_setting_update_proc(void)
 	if (settint_update->lux_value) {
 		chip_setting->lux_value = user_setting->lux_value;
 		iris_cmd_reg_add(&meta_cmd, IRIS_LUX_VALUE_ADDR, *((u32 *)&chip_setting->lux_value));
-		pr_info("%s, %d: configValue = %d.\n", __func__, __LINE__, *((u32 *)&chip_setting->lux_value));
+		pr_info("iris2 %s, %d: configValue = %d.\n", __func__, __LINE__, *((u32 *)&chip_setting->lux_value));
 		settint_update->lux_value= false;
 	}
 
@@ -1315,7 +1315,7 @@ int iris_feature_setting_update_proc(void)
 	if (settint_update->cct_value) {
 		chip_setting->cct_value = user_setting->cct_value;
 		iris_cmd_reg_add(&meta_cmd, IRIS_CCT_VALUE_ADDR, *((u32 *)&chip_setting->cct_value));
-		pr_info("%s, %d: configValue = %d.\n", __func__, __LINE__, *((u32 *)&chip_setting->cct_value));
+		pr_info("iris2 %s, %d: configValue = %d.\n", __func__, __LINE__, *((u32 *)&chip_setting->cct_value));
 		settint_update->cct_value= false;
 	}
 
@@ -1323,7 +1323,7 @@ int iris_feature_setting_update_proc(void)
 	if (settint_update->reading_mode) {
 		chip_setting->reading_mode = user_setting->reading_mode;
 		iris_cmd_reg_add(&meta_cmd, IRIS_READING_MODE_ADDR, *((u32 *)&chip_setting->reading_mode));
-		pr_info("%s, %d: configValue = %d.\n", __func__, __LINE__, *((u32 *)&chip_setting->reading_mode));
+		pr_info("iris2 %s, %d: configValue = %d.\n", __func__, __LINE__, *((u32 *)&chip_setting->reading_mode));
 		settint_update->reading_mode= false;
 	}
 
@@ -1363,7 +1363,7 @@ int iris_ioctl_operate_conf(void __user *argp)
 	if (ret)
 		return ret;
 
-	pr_debug("%s type = %d, value = %d\n",
+	pr_debug("iris2 %s type = %d, value = %d\n",
 				__func__, configure.type, configure.count);
 
 	child_type = (configure.type >> 8) & 0xff;
@@ -1393,7 +1393,7 @@ int iris_ioctl_operate_conf(void __user *argp)
 							configure.count, configure.values);
 			break;
 		default:
-			pr_err("could not find right opertat type = %d\n", configure.type);
+			pr_err("iris2 could not find right opertat type = %d\n", configure.type);
 			break;
 	}
 	mutex_unlock(&iris_info.config_mutex);
@@ -1459,7 +1459,7 @@ int iris_low_power_process(void)
 			return false;
 		}
 
-		pr_info("lp state = %d\n", *state);
+		pr_info("iris2 lp state = %d\n", *state);
 	}
 
 	return true;
@@ -1479,7 +1479,7 @@ void iris_low_power_mode_notify(void)
 
 	iris_i2c_reg_write(IRIS_MIPI_RX_ADDR + DCS_CMD_PARA_2, LP_CMD_LP_ENTER);
 	*state = LP_STATE_POWER_DOWN_PREPARE;
-	pr_info("enter low power mode\n");
+	pr_info("iris2 enter low power mode\n");
 }
 
 void iris_cmd_kickoff_proc(void)
@@ -1492,7 +1492,7 @@ void iris_cmd_kickoff_proc(void)
 	if ((false == iris_appcode_ready_wait()) || (!iris_panel->panel_initialized))
 		return;
 
-	//pr_err("kickoff\n");
+	//pr_err("iris2 kickoff\n");
 	if (first_boot) {
 		memset(&meta_cmd, 0, sizeof(meta_cmd));
 		memcpy(meta_cmd.cmd, grcp_header, GRCP_HEADER);

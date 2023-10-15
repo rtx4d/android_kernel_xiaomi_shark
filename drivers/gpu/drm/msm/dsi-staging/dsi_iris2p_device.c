@@ -169,7 +169,7 @@ int do_cmd_pt_power(struct iris2p_data *pdata,const struct auto_args *args)
 	int value = 0;
 	int rc = 0;
 
-	pr_err("enter:%s\n",__func__);
+	pr_err("iris2 enter:%s\n",__func__);
 
 	if (args->argc != 2 && args->argv[1].type != AUTO_ARG_TYPE_INT32) {
 	        pr_err( "Mis or unknown args!");
@@ -180,10 +180,10 @@ int do_cmd_pt_power(struct iris2p_data *pdata,const struct auto_args *args)
 
 	mutex_lock(&iris_p->irislock);
 	value = args->argv[1].m_int32;
-	pr_err("%s:enable = %d\n", __func__, value);
+	pr_err("iris2 %s:enable = %d\n", __func__, value);
 	rc = dsi_dsp_pt_power(iris_panel, value);
 	if (rc) {
-		pr_err("fail dsi_dsp_pt_power %d\n", value);
+		pr_err("iris2 fail dsi_dsp_pt_power %d\n", value);
 		goto exit;
 	}
 	if (value) {
@@ -204,14 +204,14 @@ int do_cmd_memc(struct iris2p_data *pdata,const struct auto_args *args)
 	u32 mode;
 	struct iris_mode_state *mode_state = &iris_info.mode_state;
 
-	pr_err("enter:%s\n",__func__);
+	pr_err("iris2 enter:%s\n",__func__);
 
 	if (args->argc != 2 && args->argv[1].type != AUTO_ARG_TYPE_INT32) {
 		pr_err( "Mis or unknown args!");
 		return -1;
 	}
 	data = args->argv[1].m_int32;
-	pr_err("enter:%s data = %d\n",__func__, data);
+	pr_err("iris2 enter:%s data = %d\n",__func__, data);
 	mode = data & 0xffff;
 	mode_state->sf_mode_switch_trigger = true;
 	mode_state->sf_notify_mode = mode;
@@ -225,14 +225,14 @@ int do_cmd_power_opt(struct iris2p_data *pdata,const struct auto_args *args)
 {
 	int data = 0;
 
-	//pr_err("enter:%s\n",__func__);
+	//pr_err("iris2 enter:%s\n",__func__);
 
 	if (args->argc != 2 && args->argv[1].type != AUTO_ARG_TYPE_INT32) {
 		pr_err( "Mis or unknown args!");
 		return -1;
 	}
 	data = args->argv[1].m_int32;
-	pr_err("enter:%s data = %d\n",__func__, data);
+	pr_err("iris2 enter:%s data = %d\n",__func__, data);
 	iris_debug_power_opt_disable = data;
 
 	return 0;
@@ -243,7 +243,7 @@ int do_cmd_ui(struct iris2p_data *pdata,const struct auto_args *args)
 {
         int type = 0, value = 0;
 
-        pr_err("enter:%s\n",__func__);
+        pr_err("iris2 enter:%s\n",__func__);
 
         if (args->argc != 2 && args->argv[1].type != AUTO_ARG_TYPE_INT32) {
                 pr_err( "Mis or unknown args!");
@@ -251,7 +251,7 @@ int do_cmd_ui(struct iris2p_data *pdata,const struct auto_args *args)
         }
         type = args->argv[1].m_int32;
 		value = args->argv[2].m_int32;
-        pr_err("enter:%s enable = %d %d\n",__func__, type, value);
+        pr_err("iris2 enter:%s enable = %d %d\n",__func__, type, value);
 
 		iris_configure(type, value);
         return 0;
@@ -265,7 +265,7 @@ int do_cmd(struct iris2p_data *pdata, const struct auto_args *args)
 		return 0;
 
 	s = args->argv->m_str;
-	pr_err("%s:%s  v1 = 0x%x   v2 =0x%x\n",__func__,s,args->argv[1].m_int32,args->argv[2].m_int32);
+	pr_err("iris2 %s:%s  v1 = 0x%x   v2 =0x%x\n",__func__,s,args->argv[1].m_int32,args->argv[2].m_int32);
 	//echo memc > /dev/iris2p
 	if (!strcmp(s, "memc"))
 		return do_cmd_memc(pdata, args);
@@ -284,7 +284,7 @@ static long iris2p_ioctl(struct file *file,
 {
 	int ret = 0;
 	void __user *ubuf = (void __user *)arg;
-	pr_info("%s,  cmd=%d, ubuf = %p\n", __func__, _IOC_NR(cmd), ubuf);
+	pr_info("iris2 %s,  cmd=%d, ubuf = %p\n", __func__, _IOC_NR(cmd), ubuf);
 
 	switch(cmd) {
 		case MSMFB_IRIS_OPERATE_CONF:
@@ -297,7 +297,7 @@ static long iris2p_ioctl(struct file *file,
 			//ret = msmfb_iris_operate_tool(mfd, argp);
 			break;
 		default:
-			pr_info("invalide cmd %d\n", cmd);
+			pr_info("iris2 invalide cmd %d\n", cmd);
 			break;
 	}
 	return ret;
@@ -461,7 +461,7 @@ static ssize_t memc_status_show(struct device *dev, struct device_attribute *att
 	int current_mode = mode_state->current_mode;
 
 	if (NULL == mode_state) {
-		pr_err("mode_state is NULL");
+		pr_err("iris2 mode_state is NULL");
 		return -1;
 	}
 	memset(name, 0, sizeof(name));
@@ -520,7 +520,7 @@ static ssize_t iris2p_pt_power_store(struct device *dev, struct device_attribute
 	mutex_lock(&iris_p->irislock);
 	ret = sscanf(buf, "%d", &enable);
 	if (ret < 1) {
-		pr_err("invalid value %d\n",enable);
+		pr_err("iris2 invalid value %d\n",enable);
 		goto exit;
 	}
 	if (dsi_panel_initialized(iris_panel))
@@ -528,7 +528,7 @@ static ssize_t iris2p_pt_power_store(struct device *dev, struct device_attribute
 	
 	ret = dsi_dsp_pt_power(iris_panel, enable);
 	if (ret) {
-		pr_err("fail dsi_dsp_pt_power %d\n", enable);
+		pr_err("iris2 fail dsi_dsp_pt_power %d\n", enable);
 		goto exit;
 	}
 	if (enable) {
@@ -567,7 +567,7 @@ static ssize_t iris2p_force_func_disable_store(struct device *dev, struct device
 	mutex_lock(&iris_p->irislock);
 	ret = sscanf(buf, "%d", &enable);
 	if (ret < 1) {
-		pr_err("invalid value %d\n",enable);
+		pr_err("iris2 invalid value %d\n",enable);
 		goto exit;
 	}
 
@@ -610,7 +610,7 @@ static ssize_t iris2p_firmware_store(struct device *dev, struct device_attribute
 
 	ret = sscanf(buf, "%d", &enable);
 	if (ret < 1) {
-		pr_err("invalid value %d\n",enable);
+		pr_err("iris2 invalid value %d\n",enable);
 		goto exit;
 	}
 	/* enable fw */
@@ -651,7 +651,7 @@ static ssize_t iris2p_esd_cnt_store(struct device *dev, struct device_attribute 
 
 	ret = sscanf(buf, "%d", &value);
 	if (ret < 1) {
-		pr_err("invalid value %d\n",value);
+		pr_err("iris2 invalid value %d\n",value);
 		goto exit;
 	}
 	if (0 == value) {
@@ -719,13 +719,13 @@ static void iris_reg_check_func(struct work_struct *work)
 	int32_t ret = 0;
 
 	if (!dsi_panel_initialized(iris_panel)) {
-		pr_info("panel no work,no to check iris\n");
+		pr_info("iris2 panel no work,no to check iris\n");
 		return;	
 	}
 
 	ret = iris_i2c_reg_read(INT_STATUS, &val);
 	if (val) {
-		pr_info("iris INT_STATUS 0x%x\n", val);
+		pr_info("iris2 iris INT_STATUS 0x%x\n", val);
 	}
 	schedule_delayed_work(&iris_p->iris_check_work, msecs_to_jiffies(IRIS_CHECK_TIMES));
 #endif
@@ -761,10 +761,10 @@ void iris_esd_register_dump(void)
 	u32 value = 0;
 	u32 index = 0;
 
-	pr_err("iris esd register dump: \n");
+	pr_err("iris2 iris esd register dump: \n");
 	for (index = 0; index < sizeof(iris_register_list)/ 4; index++) {
 		iris_i2c_reg_read(iris_register_list[index], &value);
-		pr_err("%08x : %08x\n", iris_register_list[index], value);
+		pr_err("iris2 %08x : %08x\n", iris_register_list[index], value);
 	}
 }
 
@@ -796,25 +796,25 @@ int get_iris_status(void)
 	int32_t val = 0;
 
 	if (!iris_info.firmware_info.app_fw_state) {
-		pr_info("fw no ready return esd");
+		pr_info("iris2 fw no ready return esd");
 		return ret;
 	}
 
 	ret = iris_i2c_reg_read(IRIS_RUN_STATUS, &data);
 	if (ret < 1) {
-		pr_err("fail to get iris status %d\n", ret);
+		pr_err("iris2 fail to get iris status %d\n", ret);
 		return 1;
 	}
 
 	iris_i2c_reg_read(IRIS_INT_STATUS, &val);
 	if (val) {
-		pr_info("iris INT_STATUS 0x%x\n", val);
+		pr_info("iris2 iris INT_STATUS 0x%x\n", val);
 	}
 
 	run_status = (data>>8)&0xff;
-	pr_info("iris IRIS_RUN_STATUS 0x%x\n", run_status);
+	pr_info("iris2 iris IRIS_RUN_STATUS 0x%x\n", run_status);
 	if (((run_status&0x01) == 1) || ((run_status&0xf0) == iris_p->esd_check_value)) {
-		pr_err("iris status err 0x%x", data);
+		pr_err("iris2 iris status err 0x%x", data);
 		iris_p->esd_check_value = 0x00;
 		if (iris_p->esd_cnt < 10000) {
 			iris_p->esd_cnt ++;
@@ -822,7 +822,7 @@ int get_iris_status(void)
 			iris_p->esd_cnt = 0;
 		}
 		if (iris_p->esd_enable) {
-			pr_err("esd recovery\n");
+			pr_err("iris2 esd recovery\n");
 			iris_esd_register_dump();
 			ret = -1;
 		}
@@ -843,12 +843,12 @@ void iris2p_register_fs(void)
 
 	rc = misc_register(&iris2p_misc);
 	if (rc < 0) {
-		pr_err("Error: misc_register returned %d", rc);
+		pr_err("iris2 Error: misc_register returned %d", rc);
 	}
 	rc = sysfs_create_group(&iris2p_misc.this_device->kobj,
 				&iris2p_attr_group);
 	if (rc) {
-		pr_err("failed to register memc sysfs %d\n", rc);
+		pr_err("iris2 failed to register memc sysfs %d\n", rc);
 	}
 	iris_p = (struct iris2p_data *)kmalloc(sizeof(struct iris2p_data), GFP_KERNEL);
 	memset(iris_p, 0, sizeof(struct iris2p_data));

@@ -29,9 +29,9 @@ bool iris_lightup_flag = false;
 void iris_dump_packet(u8 *data, int size)
 {
 	int i = 0;
-	pr_err("size = %d\n", size);
+	pr_err("iris2 size = %d\n", size);
 	for (i = 0; i < size; i += 4)
-		pr_err("%02x %02x %02x %02x\n",
+		pr_err("iris2 %02x %02x %02x %02x\n",
 			*(data+i), *(data+i+1), *(data+i+2), *(data+i+3));
 }
 #define DUMP_PACKET   iris_dump_packet
@@ -52,7 +52,7 @@ void iris_workmode_init(struct dsi_iris_info *iris_info, struct dsi_panel *panel
 	if (DSI_OP_CMD_MODE == panel->panel_mode) {
 		pwork_mode->rx_mode = DSI_OP_CMD_MODE;
 	} else {
-		pr_info("iris abypass mode\n");
+		pr_info("iris2 iris abypass mode\n");
 		pwork_mode->rx_mode = DSI_OP_VIDEO_MODE;
 	}
 
@@ -575,28 +575,28 @@ void iris_buffer_alloc(void)
 	if(!app_fw_buf) {
 		app_fw_buf = kzalloc(DSI_DMA_TX_BUF_SIZE, GFP_KERNEL);
 		if (!app_fw_buf) {
-			pr_err("%s: failed to alloc app fw mem, size = %d\n", __func__, DSI_DMA_TX_BUF_SIZE);
+			pr_err("iris2 %s: failed to alloc app fw mem, size = %d\n", __func__, DSI_DMA_TX_BUF_SIZE);
 		}
 	}
 
 	if (!lut_fw_buf) {
 		lut_fw_buf = kzalloc(IRIS_CM_LUT_LENGTH * 4 * CMI_TOTAL, GFP_KERNEL);
 		if (!lut_fw_buf) {
-			pr_err("%s: failed to alloc lut fw mem, size = %d\n", __func__, IRIS_CM_LUT_LENGTH * 4 * CMI_TOTAL);
+			pr_err("iris2 %s: failed to alloc lut fw mem, size = %d\n", __func__, IRIS_CM_LUT_LENGTH * 4 * CMI_TOTAL);
 		}
 	}
 
 	if (!gamma_fw_buf) {
 		gamma_fw_buf = kzalloc(8 * 1024, GFP_KERNEL);
 		if (!gamma_fw_buf) {
-			pr_err("%s: failed to alloc gamma fw mem, size = %d\n", __func__, 8 * 1024);
+			pr_err("iris2 %s: failed to alloc gamma fw mem, size = %d\n", __func__, 8 * 1024);
 		}
 	}
 
 	if (!iris_cmlut_buf) {
 		iris_cmlut_buf = kzalloc(32 * 1024, GFP_KERNEL);
 		if (!iris_cmlut_buf) {
-			pr_err("%s: failed to alloc cm lut mem, size = %d\n", __func__, 32 * 1024);
+			pr_err("iris2 %s: failed to alloc cm lut mem, size = %d\n", __func__, 32 * 1024);
 		}
 	}
 }
@@ -632,7 +632,7 @@ int iris_dsi_cmds_send(struct dsi_panel *panel,
 		return -EINVAL;
 
 	if (count == 0) {
-		pr_debug("[%s] No commands to be sent for state\n",
+		pr_debug("iris2 [%s] No commands to be sent for state\n",
 			 panel->name);
 		goto error;
 	}
@@ -647,7 +647,7 @@ int iris_dsi_cmds_send(struct dsi_panel *panel,
 		len = ops->transfer(panel->host, &cmds->msg);
 		if (len < 0) {
 			rc = len;
-			pr_err("failed to set cmds(%d), rc=%d\n", cmds->msg.type, rc);
+			pr_err("iris2 failed to set cmds(%d), rc=%d\n", cmds->msg.type, rc);
 			goto error;
 		}
 		if (cmds->post_wait_ms)
@@ -678,11 +678,11 @@ u8 iris_mipi_power_mode_read(struct dsi_panel *panel, enum dsi_cmd_set_state sta
 
 	rc = ops->transfer(panel->host, &cmds.msg);
 	if (rc < 0) {
-		pr_err("failed to set cmds(%d), rc=%d, read=%d\n", cmds.msg.type, rc, iris_read_cmd_buf[0]);
+		pr_err("iris2 failed to set cmds(%d), rc=%d, read=%d\n", cmds.msg.type, rc, iris_read_cmd_buf[0]);
 		return data;
 	}
 	data = iris_read_cmd_buf[0];
-	pr_err("power_mode: %d\n", data);
+	pr_err("iris2 power_mode: %d\n", data);
 
 	return data;
 }
@@ -707,7 +707,7 @@ int iris_Romcode_state_check(struct dsi_panel *panel, u8 data, u8 retry_cnt)
 		#else
 			powermode = iris_mipi_power_mode_read(panel, DSI_CMD_SET_STATE_LP);
 		#endif
-		pr_debug("read back powermode: %d, cnt: %d\n", powermode, cnt);
+		pr_debug("iris2 read back powermode: %d, cnt: %d\n", powermode, cnt);
 
 		if (powermode == data)
 			break;
@@ -717,7 +717,7 @@ int iris_Romcode_state_check(struct dsi_panel *panel, u8 data, u8 retry_cnt)
 
 	/* read failed */
 	if (cnt == retry_cnt) {
-		pr_err("iris power mode check %x failed\n", data);
+		pr_err("iris2 iris power mode check %x failed\n", data);
 		return -1;
 	}
 #endif
@@ -767,7 +767,7 @@ void iris_init_cmd_send(struct dsi_panel *panel, enum dsi_cmd_set_state state)
 	iris_init_info_cmds[1].msg.tx_len = init_cmd[1].cmd_len;
 	iris_init_info_cmds[2].msg.tx_len = init_cmd[2].cmd_len;
 
-	pr_debug("iris: send init cmd\n");
+	pr_debug("iris2 iris: send init cmd\n");
 	iris_dsi_cmds_send(panel, iris_init_info_cmds, ARRAY_SIZE(iris_init_info_cmds), state);
 
 	DUMP_PACKET(init_cmd[0].cmd, init_cmd[0].cmd_len);
@@ -818,7 +818,7 @@ void iris_timing_info_send(struct dsi_panel *panel, enum dsi_cmd_set_state state
 	*(u32 *)(iris_timing + 36) = cpu_to_le32((poutput_timing->vsw << 16) + poutput_timing->vbp);
 	*(u32 *)(iris_timing + 40) = cpu_to_le32((poutput_timing->fps << 8) + 0x1f);
 
-	pr_debug("iris: send timing info\n");
+	pr_debug("iris2 iris: send timing info\n");
 	iris_dsi_cmds_send(panel, iris_timing_info_cmd, ARRAY_SIZE(iris_timing_info_cmd), state);
 
 	DUMP_PACKET(iris_workmode, sizeof(iris_workmode));
@@ -1021,7 +1021,7 @@ void iris_mipi_mem_addr_cmd_send(struct dsi_panel *panel, u16 column, u16 page, 
 	page_addr[3] = (page >> 8) & 0xff;
 	page_addr[4] = page & 0xff;
 
-	pr_debug("iris: set mipi mem addr: %x, %x\n", column, page);
+	pr_debug("iris2 iris: set mipi mem addr: %x, %x\n", column, page);
 	iris_dsi_cmds_send(panel, iris_mem_addr_cmd, ARRAY_SIZE(iris_mem_addr_cmd), state);
 
 }
@@ -1034,7 +1034,7 @@ int iris_firmware_data_read(const u8 *fw_data, size_t fw_size)
 	if(!app_fw_buf) {
 		app_fw_buf = kzalloc(DSI_DMA_TX_BUF_SIZE, GFP_KERNEL);
 		if (!app_fw_buf) {
-			pr_err("%s: failed to alloc app fw mem, size = %d\n", __func__, DSI_DMA_TX_BUF_SIZE);
+			pr_err("iris2 %s: failed to alloc app fw mem, size = %d\n", __func__, DSI_DMA_TX_BUF_SIZE);
 			return false;
 		}
 	}
@@ -1071,18 +1071,18 @@ int iris_firmware_download_init(struct dsi_panel *panel, const char *name)
 		/* Firmware file must be in /system/etc/firmware/ */
 		ret = request_firmware(&fw, name, iris_drm->dev);
 		if (ret) {
-			pr_err("%s: failed to request firmware: %s, ret = %d\n",
+			pr_err("iris2 %s: failed to request firmware: %s, ret = %d\n",
 					__func__, name, ret);
 			result = false;
 		} else {
-			pr_err("%s: request firmware: name = %s, size = %zu bytes\n",
+			pr_err("iris2 %s: request firmware: name = %s, size = %zu bytes\n",
 						__func__, name, fw->size);
 			if (iris_firmware_data_read(fw->data, fw->size))
 				iris_info.firmware_info.app_fw_size = fw->size;
 			release_firmware(fw);
 		}
 	} else {
-		pr_err("%s: firmware is null\n", __func__);
+		pr_err("iris2 %s: firmware is null\n", __func__);
 		result = false;
 	}
 
@@ -1191,11 +1191,11 @@ u16 iris_mipi_fw_download_result_read(struct dsi_panel *panel)
 
 	rc = ops->transfer(panel->host, &cmds.msg);
 	if (rc < 0) {
-		pr_err("failed to set cmds(%d), rc=%d\n", cmds.msg.type, rc);
+		pr_err("iris2 failed to set cmds(%d), rc=%d\n", cmds.msg.type, rc);
 		return 0xff;
 	}
 	data = iris_read_cmd_buf[0] | ((iris_read_cmd_buf[1] & 0x0f) << 8);
-	pr_err("download_reslut: %x\n", data);
+	pr_err("iris2 download_reslut: %x\n", data);
 
 	return (data & 0x0f00);
 }
@@ -1231,17 +1231,17 @@ int iris_fw_download_result_check(struct dsi_panel *panel)
 
 	iris_i2c_reg_read(IRIS_MIPI_RX_ADDR + INTSTAT_RAW, &reg_value);
 	if (reg_value & (0x3 << 7)) {
-		pr_err("abnormal error: %x\n", reg_value);
+		pr_err("iris2 abnormal error: %x\n", reg_value);
 		iris_i2c_reg_write(IRIS_MIPI_RX_ADDR + INTCLR, 0x780);
 		return false;
 	}
 
 	/*read failed*/
 	if (FW_CHECK_COUNT == cnt) {
-		pr_err("firmware download failed\n");
+		pr_err("iris2 firmware download failed\n");
 		return false;
 	} else
-		pr_debug("firmware download success\n");
+		pr_debug("iris2 firmware download success\n");
 
 	return true;
 }
@@ -1320,7 +1320,7 @@ int iris_firmware_download(struct dsi_panel *panel,
 			#endif
 			if (result == true)
 				break;
-			pr_info("iris firmware download again\n");
+			pr_info("iris2 iris firmware download again\n");
 		}
 		iris_firmware_download_restore(panel, cont_splash);
 	}
@@ -1339,7 +1339,7 @@ int iris_lut_firmware_init(const char *name)
 	if (!lut_fw_buf) {
 		lut_fw_buf = kzalloc(IRIS_CM_LUT_LENGTH * 4 * CMI_TOTAL, GFP_KERNEL);
 		if (!lut_fw_buf) {
-			pr_err("%s: failed to alloc  lut fw mem, size = %d\n", __func__, IRIS_CM_LUT_LENGTH * 4 * CMI_TOTAL);
+			pr_err("iris2 %s: failed to alloc  lut fw mem, size = %d\n", __func__, IRIS_CM_LUT_LENGTH * 4 * CMI_TOTAL);
 			return false;
 		}
 	}
@@ -1351,18 +1351,18 @@ int iris_lut_firmware_init(const char *name)
 		/* Firmware file must be in /system/etc/firmware/ */
 		ret = request_firmware(&fw, name, iris_drm->dev);
 		if (ret) {
-			pr_err("%s: failed to request firmware: %s, ret = %d\n",
+			pr_err("iris2 %s: failed to request firmware: %s, ret = %d\n",
 					__func__, name, ret);
 			return false;
 		} else {
-			pr_info("%s: request firmware: name = %s, size = %zu bytes\n",
+			pr_info("iris2 %s: request firmware: name = %s, size = %zu bytes\n",
 						__func__, name, fw->size);
 			memcpy(lut_fw_buf, fw->data, fw->size);
 			lut_info->lut_fw_state = true;
 			release_firmware(fw);
 		}
 	} else {
-		pr_err("%s: firmware is null\n", __func__);
+		pr_err("iris2 %s: firmware is null\n", __func__);
 		return false;
 	}
 
@@ -1381,7 +1381,7 @@ int iris_gamma_firmware_init(const char *name)
 	if (!gamma_fw_buf) {
 		gamma_fw_buf = kzalloc(8 * 1024, GFP_KERNEL);
 		if (!gamma_fw_buf) {
-			pr_err("%s: failed to alloc gamma fw mem, size = %d\n", __func__, 8 * 1024);
+			pr_err("iris2 %s: failed to alloc gamma fw mem, size = %d\n", __func__, 8 * 1024);
 			return false;
 		}
 	}
@@ -1390,11 +1390,11 @@ int iris_gamma_firmware_init(const char *name)
 		/* Firmware file must be in /system/etc/firmware/ */
 		ret = request_firmware(&fw, name, iris_drm->dev);
 		if (ret) {
-			pr_err("%s: failed to request firmware: %s, ret = %d\n",
+			pr_err("iris2 %s: failed to request firmware: %s, ret = %d\n",
 					__func__, name, ret);
 			return false;
 		} else {
-			pr_info("%s: request firmware: name = %s, size = %zu bytes\n",
+			pr_info("iris2 %s: request firmware: name = %s, size = %zu bytes\n",
 						__func__, name, fw->size);
 			memcpy(gamma_fw_buf, fw->data, fw->size);
 			gamma_info->gamma_fw_size = fw->size;
@@ -1402,7 +1402,7 @@ int iris_gamma_firmware_init(const char *name)
 			release_firmware(fw);
 		}
 	} else {
-		pr_err("%s: firmware is null\n", __func__);
+		pr_err("iris2 %s: firmware is null\n", __func__);
 		return false;
 	}
 
@@ -1439,7 +1439,7 @@ void iris_firmware_cmlut_update(u8 *buf, u32 cm3d)
 	struct iris_lut_info *lut_info = &iris_info.lut_info;
 
 	if (!lut_info->lut_fw_state) {
-		pr_debug("cm lut read failed\n");
+		pr_debug("iris2 cm lut read failed\n");
 		return;
 	}
 	switch (cm3d) {
@@ -1532,7 +1532,7 @@ void iris_reset_failure_recover(struct dsi_panel *panel)
 		}
 		ret = iris_Romcode_state_check(panel, 0x01, 50);
 		cnt++;
-		pr_err("iris_reset_failure_recover: %d\n", cnt);
+		pr_err("iris2 iris_reset_failure_recover: %d\n", cnt);
 	} while((cnt < 3) && (ret < 0));
 
 }
@@ -1568,7 +1568,7 @@ void iris_init_failure_recover(struct dsi_panel *panel)
 		/* wait Romcode ready */
 		ret = iris_Romcode_state_check(panel, 0x03, 50);
 		cnt++;
-		pr_err("iris_init_failure_recover: %d\n", cnt);
+		pr_err("iris2 iris_init_failure_recover: %d\n", cnt);
 	} while((cnt < 3) && (ret < 0));
 
 }
@@ -1615,7 +1615,7 @@ void iris_enable_failure_recover(struct dsi_panel *panel)
 		/* wait Romcode ready */
 		ret = iris_Romcode_state_check(panel, 0x07, 50);
 		cnt++;
-		pr_err("iris_enable_failure_recover: %d\n", cnt);
+		pr_err("iris2 iris_enable_failure_recover: %d\n", cnt);
 	} while((cnt < 3) && (ret < 0));
 
 }
@@ -1629,7 +1629,7 @@ void iris_firmware_download_cont_splash(struct dsi_panel *panel)
 	if (!first_boot)
 		return;
 
-	pr_info("iris_firmware_download_cont_splash\n");
+	pr_info("iris2 iris_firmware_download_cont_splash\n");
 	first_boot = false;
 	ret = iris_Romcode_state_check(panel, 0x07, 50);
 	if (ret < 0)
@@ -1657,7 +1657,7 @@ void iris_appcode_init_done_wait(struct dsi_panel *panel)
 {
 	if (iris_lightup_flag) {
 		iris_lightup_flag = false;
-		pr_debug("iris_appcode_init_done_wait\n");
+		pr_debug("iris2 iris_appcode_init_done_wait\n");
 		/*wait appcode init done*/
 		if (!iris_debug_fw_download_disable)
 			iris_Romcode_state_check(panel, 0x9b, 200);
@@ -1812,7 +1812,7 @@ void iris_lightup(struct dsi_panel *panel)
 	ktime3 = ktime_get();
 	timeus2 = (u32) ktime_to_us(ktime3) - (u32)ktime_to_us(ktime2);
 
-	pr_err("iris light up: %d %d %d\n", timeus0, timeus1, timeus2);
+	pr_err("iris2 iris light up: %d %d %d\n", timeus0, timeus1, timeus2);
 }
 
 void iris_lightdown(struct dsi_panel *panel)
