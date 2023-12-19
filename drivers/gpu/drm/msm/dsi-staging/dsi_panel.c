@@ -1906,7 +1906,13 @@ static int dsi_panel_parse_phy_props(struct dsi_panel_phy_props *props,
 
 	str = of_get_property(of_node, "qcom,mdss-dsi-panel-orientation", NULL);
 	if (!str) {
+		props->rotation = DSI_PANEL_ROTATE_NONE;
+	} else if (!strcmp(str, "180")) {
 		props->rotation = DSI_PANEL_ROTATE_HV_FLIP;
+	} else if (!strcmp(str, "hflip")) {
+		props->rotation = DSI_PANEL_ROTATE_H_FLIP;
+	} else if (!strcmp(str, "vflip")) {
+		props->rotation = DSI_PANEL_ROTATE_V_FLIP;
 	} else {
 		pr_err("[%s] Unrecognized panel rotation-%s\n", name, str);
 		rc = -EINVAL;
