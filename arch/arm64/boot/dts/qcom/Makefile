@@ -1,4 +1,3 @@
-ifeq ($(CONFIG_MACH_XIAOMI_SDM845),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 	dtbo-y += \
 		sdm845-shark-preevt-overlay.dtbo \
@@ -30,7 +29,8 @@ else
 dtb-y += \
 	sdm845-shark.dtb
 endif
-else
+
+ifeq (,false)
 
 dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
 dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
