@@ -20,29 +20,6 @@
 #include "sdm845-pinctrl-shark.dtsi"
 #include "sdm845-vs-memshare-shark.dtsi"
 
-/*
-  device check : the 0 means that it don't need to check;
-    the 1 means that it check at board level and phone level test(running test);
-    the 2 means that it only check at phone level test(running test);
-*/
-
-&devcheck {
-	status = "ok";
-	codec = <0>;
-	camera_main = <0>;
-	camera_rearaux = <0>;
-	camera_slave = <0>;
-	camera_dsp = <0>; // PT & BC(?)
-	charge_master = <0>;
-	charge_slave = <0>;
-	battery = <0>;
-	usb_switch = <0>;
-	lcd_dsp = <0>;
-	rgb = <0>;
-	tp = <0>;
-	wifi = <0>;
-};
-
 &spmi_bus {
        qcom,pm8998@0 {
                qcom,clkdiv@5d00 {
