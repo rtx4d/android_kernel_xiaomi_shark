@@ -1,9 +1,11 @@
 ifeq ($(CONFIG_MACH_XIAOMI_SDM845),y)
 ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
-	dtbo-y += \
-		sdm845-mtp-overlay.dtbo \
-		sdm845-v2-mtp-overlay.dtbo \
-		sdm845-v2.1-mtp-overlay.dtbo
+	ifneq ($(CONFIG_MACH_XIAOMI_E30),y)
+		dtbo-y += \
+			sdm845-mtp-overlay.dtbo \
+			sdm845-v2-mtp-overlay.dtbo \
+			sdm845-v2.1-mtp-overlay.dtbo
+	endif
 
 	dtbo-$(CONFIG_MACH_XIAOMI_D5X) += \
 		polaris-p0-overlay.dtbo  \
@@ -33,6 +35,19 @@ ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
 		perseus-p2-v2.1-overlay.dtbo \
 		perseus-p3-v2.1-overlay.dtbo \
 		perseus-mp-v2.1-overlay.dtbo
+
+	dtbo-$(CONFIG_MACH_XIAOMI_E30) += \
+		shark-dvt-v2-overlay.dtbo \
+		shark-dvt-v2.1-overlay.dtbo \
+		shark-dvt2-v2-overlay.dtbo \
+		shark-dvt2-v2.1-overlay.dtbo \
+		shark-preevt-overlay.dtbo \
+		shark-preevt-v2-overlay.dtbo \
+		shark-evt-overlay.dtbo \
+		shark-evt-v2-overlay.dtbo \
+		shark-pvt-v2-overlay.dtbo \
+		shark-pvt-v2.1-overlay.dtbo \
+		shark-pvt2-v2.1-overlay.dtbo
 
 sdm845-mtp-overlay.dtbo-base := sdm845.dtb
 sdm845-v2-mtp-overlay.dtbo-base := sdm845-v2.dtb
@@ -66,7 +81,21 @@ perseus-p1_2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 perseus-p2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 perseus-p3-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
 perseus-mp-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+
+shark-dvt-v2-overlay.dtbo-base := sdm845-v2.dtb
+shark-dvt-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+shark-dvt2-v2-overlay.dtbo-base := sdm845-v2.dtb
+shark-dvt2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+shark-preevt-overlay.dtbo-base := sdm845.dtb
+shark-preevt-v2-overlay.dtbo-base := sdm845-v2.dtb
+shark-evt-overlay.dtbo-base := sdm845.dtb
+shark-evt-v2-overlay.dtbo-base := sdm845-v2.dtb
+shark-pvt-v2-overlay.dtbo-base := sdm845-v2.dtb
+shark-pvt-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+shark-pvt2-v2.1-overlay.dtbo-base := sdm845-v2.1.dtb
+
 else
+ifneq ($(CONFIG_MACH_XIAOMI_E30),y)
 dtb-y += \
 	sdm845-sim.dtb \
 	sdm845-rumi.dtb \
@@ -80,6 +109,7 @@ dtb-y += \
 	sdm845-4k-panel-mtp.dtb \
 	sdm845-4k-panel-cdp.dtb \
 	sdm845-4k-panel-qrd.dtb
+endif
 
 dtb-$(CONFIG_MACH_XIAOMI_D5X) += \
 	polaris-p0.dtb \
@@ -144,6 +174,9 @@ dtb-$(CONFIG_MACH_XIAOMI_E5) += \
 	perseus-p2-v2.1.dtb \
 	perseus-p3-v2.1.dtb \
 	perseus-mp-v2.1.dtb
+
+dtb-$(CONFIG_MACH_XIAOMI_E30) += \
+	shark-dvt-v2.1.dtb
 endif
 else
 dtb-$(CONFIG_ARCH_QCOM)	+= apq8016-sbc.dtb msm8916-mtp.dtb
