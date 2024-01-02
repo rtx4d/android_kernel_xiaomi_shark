@@ -758,6 +758,13 @@ config LEDS_AW2015
 	  this option enables support for the AW2015 RGB LED connected
 	  through I2C. Say Y to enable support for the AW2015 LED
 
+config LEDS_AW9120
+	tristate "LED support for AW9120"
+	depends on LEDS_CLASS && I2C
+	help
+	  This option enables support for the AW9120 RGB LED connected
+	  through I2C. Say Y to enable support for the AW9120 LED.
+
 comment "LED Triggers"
 source "drivers/leds/trigger/Kconfig"
 
