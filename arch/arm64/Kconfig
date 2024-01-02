@@ -1476,6 +1476,12 @@ config MACH_XIAOMI_E5
         help
           Support for Xiaomi MIX 3 (perseus)
 
+config MACH_XIAOMI_E30
+        bool "E30 board"
+        select MACH_XIAOMI_SDM845
+        help
+          Support for Xiaomi Black Shark (shark)
+
 endmenu
 
 endmenu
