@@ -40,6 +40,10 @@
 #include "sde_core_irq.h"
 #include "dsi_drm.h"
 
+#if defined(CONFIG_IRIS2P_FULL_SUPPORT)
+#include "../dsi-staging/dsi_iris2p_api.h"
+#endif
+
 #define SDE_DEBUG_ENC(e, fmt, ...) SDE_DEBUG("enc%d " fmt,\
 		(e) ? (e)->base.base.id : -1, ##__VA_ARGS__)
 
@@ -4210,6 +4214,10 @@ int sde_encoder_prepare_for_kickoff(struct drm_encoder *drm_enc,
 	}
 
 	_sde_encoder_update_master(drm_enc, params);
+
+#if defined(CONFIG_IRIS2P_FULL_SUPPORT)
+	iris_cmd_kickoff_proc();
+#endif
 
 	_sde_encoder_update_roi(drm_enc);
 

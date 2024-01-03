@@ -154,3 +154,8 @@ config DRM_SDE_XLOG_DEBUG
 	default n
 	depends on DRM_MSM
 
+config IRIS2P_FULL_SUPPORT
+	bool "Enable IRIS2P Support"
+	default n
+	---help---
+	Say y to enable
