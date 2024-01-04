@@ -6661,7 +6661,11 @@ static struct snd_soc_dai_link msm_quat_mi2s_tas2559_dai_links[] = {
 		.stream_name = "Quaternary MI2S Playback",
 		.cpu_dai_name = "msm-dai-q6-mi2s.3",
 		.platform_name = "msm-pcm-routing",
+#ifdef CONFIG_MACH_XIAOMI_E30
+		.codec_name = "tas2559.3-004c",
+#else
 		.codec_name = "tas2559.2-004c",
+#endif
 		.codec_dai_name = "tas2559 ASI1",
 		.no_pcm = 1,
 		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_CBS_CFS,
