@@ -1664,7 +1664,9 @@ static struct msm_dir_conn sdm845_dir_conn[] = {
 	{24, 517},
 	{26, 518},
 	{30, 519},
+#if defined(CONFIG_MACH_XIAOMI_SDM845) && !defined(CONFIG_MACH_XIAOMI_E30)
 	{31, 639},
+#endif
 	{32, 521},
 	{34, 522},
 	{36, 523},
